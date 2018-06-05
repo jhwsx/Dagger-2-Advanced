@@ -9,7 +9,11 @@ import android.support.v7.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hariofspades.dagger2advanced.MainActivityFeature.DaggerMainActivityComponent;
+import com.hariofspades.dagger2advanced.MainActivityFeature.MainActivityComponent;
+import com.hariofspades.dagger2advanced.MainActivityFeature.MainActivityModule;
 import com.hariofspades.dagger2advanced.adapter.RandomUserAdapter;
+import com.hariofspades.dagger2advanced.application.RandomUserApplication;
 import com.hariofspades.dagger2advanced.component.DaggerRandomUserComponent;
 import com.hariofspades.dagger2advanced.component.RandomUserComponent;
 import com.hariofspades.dagger2advanced.interfaces.RandomUsersApi;
@@ -48,10 +52,21 @@ public class MainActivity extends AppCompatActivity {
 
 //        beforeDagger();
 
-        afterDagger();
+//        afterDagger();
+
+        afterActivityLevelComponent();
 
         populateUsers();
 
+    }
+
+    private void afterActivityLevelComponent() {
+        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent.builder()
+                .mainActivityModule(new MainActivityModule(this))
+                .randomUserComponent(RandomUserApplication.get(this).getRandomUserApplicationComponent())
+                .build();
+        randomUsersApi = mainActivityComponent.getRandomUserService();
+        mAdapter = mainActivityComponent.getRandomUserAdapter();
     }
 
     private void afterDagger() {
@@ -110,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
         randomUsersCall.enqueue(new Callback<RandomUsers>() {
             @Override
             public void onResponse(Call<RandomUsers> call, @NonNull Response<RandomUsers> response) {
-                if(response.isSuccessful()) {
-                    mAdapter = new RandomUserAdapter(MainActivity.this, picasso);
+                if (response.isSuccessful()) {
+//                    mAdapter = new RandomUserAdapter(MainActivity.this, picasso);
                     mAdapter.setItems(response.body().getResults());
                     recyclerView.setAdapter(mAdapter);
                 }
@@ -124,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public RandomUsersApi getRandomUserService(){
+    public RandomUsersApi getRandomUserService() {
         return randomUsersApi;
     }
 
