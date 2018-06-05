@@ -1,19 +1,21 @@
 package com.hariofspades.dagger2advanced;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hariofspades.dagger2advanced.adapter.RandomUserAdapter;
+import com.hariofspades.dagger2advanced.component.DaggerRandomUserComponent;
+import com.hariofspades.dagger2advanced.component.RandomUserComponent;
 import com.hariofspades.dagger2advanced.interfaces.RandomUsersApi;
 import com.hariofspades.dagger2advanced.model.RandomUsers;
+import com.hariofspades.dagger2advanced.module.ContextModule;
 import com.jakewharton.picasso.OkHttp3Downloader;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Retrofit retrofit;
     RecyclerView recyclerView;
     RandomUserAdapter mAdapter;
-
+    RandomUsersApi randomUsersApi;
     Context context;
     Picasso picasso;
 
@@ -44,6 +46,22 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         context = this;
 
+//        beforeDagger();
+
+        afterDagger();
+
+        populateUsers();
+
+    }
+
+    private void afterDagger() {
+        RandomUserComponent randomUserComponent = DaggerRandomUserComponent.builder()
+                .contextModule(new ContextModule(this)).build();
+        picasso = randomUserComponent.getPicasso();
+        randomUsersApi = randomUserComponent.getRandomUserService();
+    }
+
+    private void beforeDagger() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
@@ -80,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl("https://randomuser.me/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-
-        populateUsers();
-
     }
 
     private void initViews() {
@@ -110,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public RandomUsersApi getRandomUserService(){
-        return retrofit.create(RandomUsersApi.class);
+        return randomUsersApi;
     }
 
 
