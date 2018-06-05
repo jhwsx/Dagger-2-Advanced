@@ -24,6 +24,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -38,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     Retrofit retrofit;
     RecyclerView recyclerView;
+    @Inject
     RandomUserAdapter mAdapter;
+    @Inject
     RandomUsersApi randomUsersApi;
     Context context;
     Picasso picasso;
@@ -65,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 .mainActivityModule(new MainActivityModule(this))
                 .randomUserComponent(RandomUserApplication.get(this).getRandomUserApplicationComponent())
                 .build();
-        randomUsersApi = mainActivityComponent.getRandomUserService();
-        mAdapter = mainActivityComponent.getRandomUserAdapter();
+//        randomUsersApi = mainActivityComponent.getRandomUserService();
+//        mAdapter = mainActivityComponent.getRandomUserAdapter();
+
+        mainActivityComponent.injectMainActivity(this);
     }
 
     private void afterDagger() {
