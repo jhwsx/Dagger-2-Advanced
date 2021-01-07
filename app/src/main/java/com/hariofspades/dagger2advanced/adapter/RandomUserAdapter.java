@@ -1,6 +1,6 @@
 package com.hariofspades.dagger2advanced.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +41,7 @@ public class RandomUserAdapter extends RecyclerView.Adapter<RandomUserAdapter.Ra
         Result result = resultList.get(position);
         holder.textView.setText(String.format("%s %s", result.getName().getFirst(),
                 result.getName().getLast()));
-        picasso.with(holder.imageView.getContext())
+        picasso.get()
                 .load(result.getPicture().getLarge())
                 .into(holder.imageView);
     }

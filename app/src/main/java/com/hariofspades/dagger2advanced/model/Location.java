@@ -9,7 +9,7 @@ public class Location {
 
     @SerializedName("street")
     @Expose
-    private String street;
+    private Street street;
     @SerializedName("city")
     @Expose
     private String city;
@@ -18,13 +18,13 @@ public class Location {
     private String state;
     @SerializedName("postcode")
     @Expose
-    private Integer postcode;
+    private String postcode;
 
-    public String getStreet() {
+    public Street getStreet() {
         return street;
     }
 
-    public void setStreet(String street) {
+    public void setStreet(Street street) {
         this.street = street;
     }
 
@@ -44,11 +44,11 @@ public class Location {
         this.state = state;
     }
 
-    public Integer getPostcode() {
+    public String getPostcode() {
         return postcode;
     }
 
-    public void setPostcode(Integer postcode) {
+    public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
 
